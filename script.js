@@ -3,49 +3,77 @@ const clearBtn = document.querySelector('button[data-clear]');
 const numBtns = document.querySelectorAll('button[data-number]');
 const operatorBtns = document.querySelectorAll('button[data-operator]');
 let btns = document.querySelectorAll('.btn');
-let num1 = '';
-let num2 = '';
+let val1 = [];
+let val2 = [];
+let solution = '';
+let operator = '';
 
-const add = (num1, num2) => num1 + num2;
-const subtract = (num1, num2) => num1 - num2;
-const multiply = (num1, num2) => num1 * num2;
-const divide = (num1, num2) => num1 / num2;
+const add = (val1, val2) => val1 + val2;
+const subtract = (val1, val2) => val1 - val2;
+const multiply = (val1, val2) => val1 * val2;
+const divide = (val1, val2) => val1 / val2;
 
-const operate = (num1, num2, operator) => {
+const operate = (val1, val2, operator) => {
+
 	switch (operator) {
 		case '+':
-			return add(num1, num2);
+			return add(val1, val2);
 			break;
 		case '-':
-			return subtract(num1, num2);
+			return subtract(val1, val2);
 			break;
 		case '*':
-			return multiply(num1, num2);
+			return multiply(val1, val2);
 			break;
 		case '/':
-			return divide(num1, num2);
+			return divide(val1, val2);
 			break;
 	}
 };
 
-let numberClicked = false;
+const clear = () => {
+	num1Clicked = false;
+	num2Clicked = false;
+	operatorClicked = false;
+	screen.textContent = '';
+	val1 = [];
+	val2 = [];
+	operator = '';
+	solution = '';
+};
+
+let num1Clicked = false;
+let num2Clicked = false;
 let operatorClicked = false;
 
 btns.forEach((button) => {
 	button.addEventListener('click', (e) => {
 		if (button.dataset.number) {
-			numberClicked = true;
+			num1Clicked = true;
 			screen.textContent += e.target.textContent;
-			num1 += button.dataset.number;
 		}
 		if (button.dataset.operator) {
-			if (numberClicked) {
+			if (num1Clicked) {
+				operator = button.dataset.operator;
 				operatorClicked = true;
+				val1.push(screen.textContent);
+				val1 = Number(val1);
 			}
 		}
 		if (button.dataset.number) {
 			if (operatorClicked) {
-				console.log(operatorClicked);
+				num2Clicked = true;
+				num1Clicked = false;
+				operatorClicked = false;
+				screen.textContent = '';
+				screen.textContent += e.target.textContent;
+			}
+		}
+		if(button.dataset.equals) {
+			if (num2Clicked) {
+				val2.push(screen.textContent);
+				val2 = Number(val2);
+				screen.textContent = operate(val1, val2, operator);
 			}
 		}
 	});
@@ -58,7 +86,8 @@ numBtns.forEach((button) => {
 });
 
 clearBtn.addEventListener('click', (e) => {
-	screen.textContent = '';
-	num1 = '';
-	num2 = '';
+	clear();
 });
+
+let result = ["1", "2", "3", "4"]
+console.log(typeof result[0]);
