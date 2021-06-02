@@ -1,12 +1,11 @@
 const screen = document.querySelector('.screen');
 const clearBtn = document.querySelector('button[data-clear]');
-const numBtns = document.querySelectorAll('button[data-number]');
-const operatorBtns = document.querySelectorAll('button[data-operator]');
+const backspaceBtn = document.querySelector('button[data-backspace]');
 let btns = document.querySelectorAll('.btn');
 let val1 = [];
 let val2 = [];
-let solution = '';
 let operator = '';
+let solution = '';
 
 const add = (val1, val2) => val1 + val2;
 const subtract = (val1, val2) => val1 - val2;
@@ -30,6 +29,8 @@ const operate = (val1, val2, operator) => {
 	}
 };
 
+const backspace = () => (screen.textContent = screen.textContent.slice(0, -1));
+
 const clear = () => {
 	num1Clicked = false;
 	num2Clicked = false;
@@ -40,7 +41,6 @@ const clear = () => {
 	val2 = [];
 	operator = '';
 	solution = '';
-	displayValue = '';
 };
 
 let num1Clicked = false;
@@ -53,7 +53,7 @@ btns.forEach((button) => {
 		if (button.dataset.number) {
 			num1Clicked = true;
 			screen.textContent += e.target.textContent;
-			console.log('1')
+			console.log('1');
 		}
 		if (button.dataset.operator) {
 			if (num1Clicked && !num2Clicked) {
@@ -61,7 +61,7 @@ btns.forEach((button) => {
 				operator = button.dataset.operator;
 				val1.push(screen.textContent);
 				val1 = Number(val1);
-				console.log('2')
+				console.log('2');
 			}
 		}
 		if (button.dataset.number) {
@@ -71,7 +71,7 @@ btns.forEach((button) => {
 				operatorClicked = false;
 				screen.textContent = '';
 				screen.textContent += e.target.textContent;
-				console.log('3')
+				console.log('3');
 			}
 		}
 		if (button.dataset.operator) {
@@ -85,9 +85,9 @@ btns.forEach((button) => {
 				val1 = solution;
 				val2 = [];
 				operator = button.dataset.operator;
-				console.log('4')
+				console.log('4');
 			}
-		} 
+		}
 		if (button.dataset.equals) {
 			if (num2Clicked) {
 				num2Clicked = false;
@@ -99,27 +99,25 @@ btns.forEach((button) => {
 				screen.textContent = solution;
 				val1 = solution;
 				val2 = [];
-				console.log('5')
+				console.log('5');
 			}
 		}
-		if(button.dataset.operator) {
-			if(equalsClicked) {
+		if (button.dataset.operator) {
+			if (equalsClicked) {
 				num2Clicked = false;
 				equalsClicked = false;
 				operatorClicked = true;
 				val1 = solution;
 				val2 = [];
 				operator = button.dataset.operator;
-				console.log('6')
+				console.log('6');
 			}
 		}
 	});
 });
 
-numBtns.forEach((button) => {
-	button.addEventListener('click', (e) => {
-		//screen.textContent += button.textContent;
-	});
+backspaceBtn.addEventListener('click', (e) => {
+	backspace();
 });
 
 clearBtn.addEventListener('click', (e) => {
