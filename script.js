@@ -1,6 +1,7 @@
 const screen = document.querySelector('.screen');
-const clearBtn = document.querySelector('button[data-clear]');
+const signBtn = document.querySelector('button[data-sign]');
 const backspaceBtn = document.querySelector('button[data-backspace]');
+const clearBtn = document.querySelector('button[data-clear]');
 let btns = document.querySelectorAll('.btn');
 let val1 = [];
 let val2 = [];
@@ -27,6 +28,14 @@ const operate = (val1, val2, operator) => {
 			return divide(val1, val2);
 			break;
 	}
+};
+
+const changeSign = () => {
+
+	if(screen.textContent.indexOf('-') === 0) {
+		return screen.textContent = screen.textContent.replace(/^-/gi, '');
+	}
+
 };
 
 const backspace = () => (screen.textContent = screen.textContent.slice(0, -1));
@@ -61,7 +70,7 @@ btns.forEach((button) => {
 				operator = button.dataset.operator;
 				val1.push(screen.textContent);
 				val1 = Number(val1);
-				console.log('2');
+				console.log(screen.textContent);
 			}
 		}
 		if (button.dataset.number) {
@@ -114,6 +123,11 @@ btns.forEach((button) => {
 			}
 		}
 	});
+});
+
+signBtn.addEventListener('click', e => {
+	changeSign();
+	console.log(screen.textContent)
 });
 
 backspaceBtn.addEventListener('click', (e) => {
