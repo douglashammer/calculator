@@ -1,12 +1,86 @@
-const screen = document.querySelector('.screen');
-const signBtn = document.querySelector('button[data-sign]');
-const backspaceBtn = document.querySelector('button[data-backspace]');
+const display = document.querySelector('.screen');
 const clearBtn = document.querySelector('button[data-clear]');
-let btns = document.querySelectorAll('.btn');
-let val1 = [];
-let val2 = [];
-let operator = '';
-let solution = '';
+const btns = document.getElementById('btn-container');
+
+let val1 = null;
+let operator = null;
+let displayValue = '0';
+let operator1Clicked = false;
+let numClicked = false;
+let signClicked = false;
+
+const updateDisplay = () => (display.value = displayValue);
+updateDisplay();
+
+const inputNumber = (number) => {
+	numClicked = true;
+	if (operator1Clicked) {
+		displayValue = number;
+		operator1Clicked = false;
+	} else if (operator1Clicked && displayValue == '-0') {
+		displayValue = `-${number}`;
+		operator1Clicked = false;
+	} else {
+		if (displayValue == '0') {
+			displayValue = number;
+		} else if (displayValue == '-0') {
+			displayValue = `-${number}`;
+		} else {
+			displayValue = displayValue + number;
+		}
+	}
+};
+
+const inputDecimal = () => {
+	if (!displayValue.includes('.')) displayValue += '.';
+};
+
+const checkOperator = (nextOperator) => {
+	const input = parseFloat(displayValue);
+
+	if (operator && operator1Clicked) {
+		operator = nextOperator;
+		return;
+	}
+
+	if (val1 == null && !isNaN(input)) {
+		val1 = input;
+	} else if (operator) {
+		const solution = operate(val1, input, operator);
+
+		displayValue = String(solution);
+		val1 = solution;
+	}
+	operator1Clicked = true;
+	operator = nextOperator;
+};
+
+const changeSign = () => {
+	if (!displayValue.includes('-')) {
+		displayValue = `-${displayValue}`;
+		signClicked = true;
+	} else {
+		displayValue = displayValue.replace('-', '');
+		signClicked = false;
+	}
+
+	if (operator1Clicked && signClicked) {
+		displayValue = '-0';
+		operator1Clicked = false;
+	}
+};
+
+const clear = () => {
+	display.value = '0';
+	displayValue = '0';
+	val1 = null;
+	input = null;
+	operator = null;
+	solution = null;
+	operator1Clicked = false;
+	numClicked = false;
+	signClicked = false;
+};
 
 const add = (val1, val2) => val1 + val2;
 const subtract = (val1, val2) => val1 - val2;
@@ -25,113 +99,37 @@ const operate = (val1, val2, operator) => {
 			return multiply(val1, val2);
 			break;
 		case '/':
-			return divide(val1, val2);
+			if (val2 === 0) {
+				return '8008135';
+			} else {
+				return divide(val1, val2);
+			}
 			break;
+		default:
+			return val2;
 	}
 };
 
-const changeSign = () => {
-
-	if(screen.textContent.indexOf('-') === 0) {
-		return screen.textContent = screen.textContent.replace(/^-/gi, '');
+btns.addEventListener('click', (e) => {
+	if (e.target.dataset.number) {
+		inputNumber(e.target.dataset.number);
+		updateDisplay();
 	}
-
-};
-
-const backspace = () => (screen.textContent = screen.textContent.slice(0, -1));
-
-const clear = () => {
-	num1Clicked = false;
-	num2Clicked = false;
-	operatorClicked = false;
-	equalsClicked = false;
-	screen.textContent = '';
-	val1 = [];
-	val2 = [];
-	operator = '';
-	solution = '';
-};
-
-let num1Clicked = false;
-let num2Clicked = false;
-let operatorClicked = false;
-let equalsClicked = false;
-
-btns.forEach((button) => {
-	button.addEventListener('click', (e) => {
-		if (button.dataset.number) {
-			num1Clicked = true;
-			screen.textContent += e.target.textContent;
-			console.log('1');
-		}
-		if (button.dataset.operator) {
-			if (num1Clicked && !num2Clicked) {
-				operatorClicked = true;
-				operator = button.dataset.operator;
-				val1.push(screen.textContent);
-				val1 = Number(val1);
-				console.log(screen.textContent);
-			}
-		}
-		if (button.dataset.number) {
-			if (operatorClicked) {
-				num2Clicked = true;
-				num1Clicked = false;
-				operatorClicked = false;
-				screen.textContent = '';
-				screen.textContent += e.target.textContent;
-				console.log('3');
-			}
-		}
-		if (button.dataset.operator) {
-			if (num2Clicked) {
-				num2Clicked = false;
-				operatorClicked = true;
-				val2.push(screen.textContent);
-				val2 = Number(val2);
-				solution = operate(val1, val2, operator);
-				screen.textContent = solution;
-				val1 = solution;
-				val2 = [];
-				operator = button.dataset.operator;
-				console.log('4');
-			}
-		}
-		if (button.dataset.equals) {
-			if (num2Clicked) {
-				num2Clicked = false;
-				equalsClicked = true;
-				operatorClicked = true;
-				val2.push(screen.textContent);
-				val2 = Number(val2);
-				solution = operate(val1, val2, operator);
-				screen.textContent = solution;
-				val1 = solution;
-				val2 = [];
-				console.log('5');
-			}
-		}
-		if (button.dataset.operator) {
-			if (equalsClicked) {
-				num2Clicked = false;
-				equalsClicked = false;
-				operatorClicked = true;
-				val1 = solution;
-				val2 = [];
-				operator = button.dataset.operator;
-				console.log('6');
-			}
-		}
-	});
-});
-
-signBtn.addEventListener('click', e => {
-	changeSign();
-	console.log(screen.textContent)
-});
-
-backspaceBtn.addEventListener('click', (e) => {
-	backspace();
+	if (e.target.dataset.operator) {
+		checkOperator(e.target.dataset.operator);
+		updateDisplay();
+	}
+	if (e.target.dataset.decimal) {
+		inputDecimal();
+		updateDisplay();
+	}
+	if (e.target.dataset.sign) {
+		changeSign();
+		updateDisplay();
+	}
+	if (e.target.dataset.backspace) {
+		console.log('backspace', e.target.dataset.backspace);
+	}
 });
 
 clearBtn.addEventListener('click', (e) => {
