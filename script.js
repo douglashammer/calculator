@@ -4,10 +4,11 @@ const btns = document.getElementById('btn-container');
 
 let val1 = null;
 let operator = null;
+let solution = null;
 let displayValue = '0';
 let operator1Clicked = false;
 let numClicked = false;
-let signClicked = false;
+let signActive = false;
 
 const updateDisplay = () => (display.value = displayValue);
 updateDisplay();
@@ -17,17 +18,12 @@ const inputNumber = (number) => {
 	if (operator1Clicked) {
 		displayValue = number;
 		operator1Clicked = false;
-	} else if (operator1Clicked && displayValue == '-0') {
+	} else if (displayValue == '-0') {
 		displayValue = `-${number}`;
-		operator1Clicked = false;
+	} else if (displayValue == '0') {
+		displayValue = number;
 	} else {
-		if (displayValue == '0') {
-			displayValue = number;
-		} else if (displayValue == '-0') {
-			displayValue = `-${number}`;
-		} else {
-			displayValue = displayValue + number;
-		}
+		displayValue = displayValue + number;
 	}
 };
 
@@ -37,7 +33,6 @@ const inputDecimal = () => {
 
 const checkOperator = (nextOperator) => {
 	const input = parseFloat(displayValue);
-
 	if (operator && operator1Clicked) {
 		operator = nextOperator;
 		return;
@@ -46,27 +41,31 @@ const checkOperator = (nextOperator) => {
 	if (val1 == null && !isNaN(input)) {
 		val1 = input;
 	} else if (operator) {
-		const solution = operate(val1, input, operator);
-
+		solution = operate(val1, input, operator);
 		displayValue = String(solution);
 		val1 = solution;
 	}
+
 	operator1Clicked = true;
 	operator = nextOperator;
 };
 
 const changeSign = () => {
+	signActive = true;
 	if (!displayValue.includes('-')) {
+		signActive = true;
 		displayValue = `-${displayValue}`;
-		signClicked = true;
-	} else {
+	} else if (displayValue.includes('-')) {
+		signActive = false;
 		displayValue = displayValue.replace('-', '');
-		signClicked = false;
 	}
 
-	if (operator1Clicked && signClicked) {
-		displayValue = '-0';
-		operator1Clicked = false;
+	if (solution && signActive) {
+		solution = solution *= -1;
+		val1 = solution;
+	} else if (solution && !signActive) {
+		solution = Math.abs(solution);
+		val1 = solution;
 	}
 };
 
@@ -79,7 +78,7 @@ const clear = () => {
 	solution = null;
 	operator1Clicked = false;
 	numClicked = false;
-	signClicked = false;
+	signActive = false;
 };
 
 const add = (val1, val2) => val1 + val2;
