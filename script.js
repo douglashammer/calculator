@@ -9,6 +9,7 @@ let displayValue = '0';
 let operator1Clicked = false;
 let numClicked = false;
 let signActive = false;
+let backspaceClicked = false;
 
 const updateDisplay = () => (display.value = displayValue);
 updateDisplay();
@@ -69,6 +70,23 @@ const changeSign = () => {
 	}
 };
 
+const backspace = () => {
+	backspaceClicked = true;
+	if (displayValue !== '0') {
+		displayValue = displayValue.slice(0, -1);
+	}
+	if (displayValue == '' || displayValue == '-') {
+		displayValue = '0';
+	}
+
+	if (solution && backspaceClicked) {
+		solution = String(solution);
+		solution = solution.slice(0, -1);
+		solution = Number(solution);
+		val1 = solution;
+	}
+};
+
 const clear = () => {
 	display.value = '0';
 	displayValue = '0';
@@ -79,6 +97,7 @@ const clear = () => {
 	operator1Clicked = false;
 	numClicked = false;
 	signActive = false;
+	backspaceClicked = false;
 };
 
 const add = (val1, val2) => val1 + val2;
@@ -127,7 +146,8 @@ btns.addEventListener('click', (e) => {
 		updateDisplay();
 	}
 	if (e.target.dataset.backspace) {
-		console.log('backspace', e.target.dataset.backspace);
+		backspace();
+		updateDisplay();
 	}
 });
 
