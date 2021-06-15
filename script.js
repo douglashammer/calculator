@@ -1,5 +1,4 @@
 const display = document.querySelector('.screen');
-const clearBtn = document.querySelector('button[data-clear]');
 const btns = document.getElementById('btn-container');
 
 let val1 = null;
@@ -16,9 +15,13 @@ updateDisplay();
 
 const inputNumber = (number) => {
 	numClicked = true;
+
+	// Clears display value if second operand is clicked
 	if (operator1Clicked) {
 		displayValue = number;
 		operator1Clicked = false;
+
+	// Clears default '0' value when number is clicked
 	} else if (displayValue == '-0') {
 		displayValue = `-${number}`;
 	} else if (displayValue == '0') {
@@ -32,6 +35,7 @@ const inputDecimal = () => {
 	if (!displayValue.includes('.')) displayValue += '.';
 };
 
+// Function checks for which operators have been clicked
 const checkOperator = (nextOperator) => {
 	const input = parseFloat(displayValue);
 	if (operator && operator1Clicked) {
@@ -39,18 +43,21 @@ const checkOperator = (nextOperator) => {
 		return;
 	}
 
+	// Checks for first input value 
 	if (val1 == null && !isNaN(input)) {
 		val1 = input;
+
+	// Checks for all operands then calls operate()  
 	} else if (operator) {
 		solution = operate(val1, input, operator);
 		displayValue = String(solution);
 		val1 = solution;
 	}
-
 	operator1Clicked = true;
 	operator = nextOperator;
 };
 
+// Function handles sign changes  
 const changeSign = () => {
 	signActive = true;
 	if (!displayValue.includes('-')) {
@@ -70,6 +77,7 @@ const changeSign = () => {
 	}
 };
 
+// Function checks for backspace clicks 
 const backspace = () => {
 	backspaceClicked = true;
 	if (displayValue !== '0') {
@@ -87,6 +95,7 @@ const backspace = () => {
 	}
 };
 
+// Resets calculator
 const clear = () => {
 	display.value = '0';
 	displayValue = '0';
@@ -128,6 +137,7 @@ const operate = (val1, val2, operator) => {
 	}
 };
 
+// Event Listeners
 btns.addEventListener('click', (e) => {
 	if (e.target.dataset.number) {
 		inputNumber(e.target.dataset.number);
@@ -149,8 +159,7 @@ btns.addEventListener('click', (e) => {
 		backspace();
 		updateDisplay();
 	}
-});
-
-clearBtn.addEventListener('click', (e) => {
-	clear();
+	if (e.target.dataset.clear) {
+		clear();
+	}
 });
