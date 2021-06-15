@@ -1,7 +1,6 @@
 # Calculator
 A simple, retro-inspired calculator application.
-Assignment from [The Odin Project]
-(https://www.theodinproject.com/paths/foundations/courses/foundations/lessons/calculator)
+Assignment from [The Odin Project](https://www.theodinproject.com/paths/foundations/courses/foundations/lessons/calculator)
 
 ![Screenshot of Project](images/calc-pic-github.png)
 
