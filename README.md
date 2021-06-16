@@ -1,5 +1,5 @@
 # Calculator
-A simple, retro-inspired calculator application.
+A simple, retro-inspired calculator application. See live preview [here](https://douglashammer.github.io/calculator/)
 Assignment from [The Odin Project](https://www.theodinproject.com/paths/foundations/courses/foundations/lessons/calculator)
 
 ![Screenshot of Project](images/calc-pic-github.png)
